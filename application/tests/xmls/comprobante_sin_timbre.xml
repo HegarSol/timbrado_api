@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cfdi:Comprobante xmlns:cfdi="http://www.sat.gob.mx/cfd/3" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:cce11="http://www.sat.gob.mx/ComercioExterior11" xsi:schemaLocation="http://www.sat.gob.mx/cfd/3 http://www.sat.gob.mx/sitio_internet/cfd/3/cfdv33.xsd http://www.sat.gob.mx/ComercioExterior11 http://www.sat.gob.mx/sitio_internet/cfd/ComercioExterior11/ComercioExterior11.xsd" Version="3.3" Serie="A" Folio="25" Fecha="2018-03-14T12:55:42" Sello="jUbTbjoqV362cS8v09swVzRbJSz4u//2n3cLl9lbTN6BvCduh/h6guQEpOh2jQnOirc1gmWO9EgpCnoTDKJRMwAXxhlPR40INE9aNad/RB7MRyAHz7+b7wKkTpK/4esOjO+Q5qMv2THeKsCowRRNeLHcgcHkmVH5Z6BA5ynwW61K60169jo7DI2T3qQ6MoCI3AAIR87GcUDMU5ztBf3OlTh+gtqqXcr4GMeKCZWeAoPLxL0KoAmLWTs7wRfHHt0WQ7erZY5k9MoXBs8+5ZpphAdU84+FAAT09bPV/PUCietGaNNWQJreT0X35flKvBKRrIvbZ0XA58vcMbUp4mfCEQ==" FormaPago="99" NoCertificado="00001000000407008949" Certificado="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" SubTotal="34410.00" Moneda="MXN" TipoCambio="1" Total="34410.00" TipoDeComprobante="I" MetodoPago="PPD" LugarExpedicion="88177">
+  <cfdi:Emisor Rfc="VAGM7505244I5" Nombre="MARISA VAZQUEZ GONZALEZ" RegimenFiscal="612"/>
+  <cfdi:Receptor Rfc="XEXX010101000" Nombre="TORTILLAS SANTOS L.L.C." ResidenciaFiscal="USA" NumRegIdTrib="205437632" UsoCFDI="P01"/>
+  <cfdi:Conceptos>
+    <cfdi:Concepto ClaveProdServ="50221300" NoIdentificacion="3" Cantidad="2000.000000" ClaveUnidad="H87" Unidad="Pieza" Descripcion="TOSTADA DE MAIZ 708 KILOGRAMOS (CORN TOAST NET WT. 1,560 LB 87 OZ)" ValorUnitario="12.00" Importe="24000.00"/>
+    <cfdi:Concepto ClaveProdServ="50221300" NoIdentificacion="4" Cantidad="180.000000" ClaveUnidad="H87" Unidad="Pieza" Descripcion="TORTILLA DE HARINA CRUDA DE TRIGO 90 KILOGRAMOS. (FLOUR TORTILLA READY TO COOK 198 LB 41 OZ)" ValorUnitario="12.00" Importe="2160.00"/>
+    <cfdi:Concepto ClaveProdServ="50221300" NoIdentificacion="2" Cantidad="120.000000" ClaveUnidad="H87" Unidad="Pieza" Descripcion="TORTILLA DE HARINA COCIDA 235 KILOS 20 GRAMOS (FLOUR TORTILLA NET. WT 518 LB 52 OZ)" ValorUnitario="60.00" Importe="7200.00"/>
+    <cfdi:Concepto ClaveProdServ="50221300" NoIdentificacion="1" Cantidad="50.000000" ClaveUnidad="H87" Unidad="Pieza" Descripcion="TORTILLA DE HARINA DE BURRITO 50 KILOGRAMOS. (COOKED FLOUR TORTILLA BURRITO 110 LB 23 OZ)" ValorUnitario="21.00" Importe="1050.00"/>
+  </cfdi:Conceptos>
+  <cfdi:Complemento>
+    <cce11:ComercioExterior Version="1.1" TipoOperacion="2" ClaveDePedimento="A1" CertificadoOrigen="0" Incoterm="EXW" Subdivision="0" TipoCambioUSD="18.5604" TotalUSD="1853.95">
+      <cce11:Emisor Curp="VAGM750524MTSZNR08">
+        <cce11:Domicilio Calle="Poseidon" NumeroExterior="329" Colonia="2763" Localidad="06" Municipio="027" Estado="TAM" Pais="MEX" CodigoPostal="88177"/>
+      </cce11:Emisor>
+      <cce11:Receptor>
+        <cce11:Domicilio Calle="AMISTAD DR" NumeroExterior="606" Localidad="LAREDO" Municipio="LAREDO" Estado="TX" Pais="USA" CodigoPostal="78041"/>
+      </cce11:Receptor>
+      <cce11:Destinatario NumRegIdTrib="205437632" Nombre="TORTILLAS SANTOS,LLC">
+        <cce11:Domicilio Calle="AMISTAD DR" NumeroExterior="606" Localidad="LAREDO" Municipio="LAREDO" Estado="TX" Pais="USA" CodigoPostal="78041"/>
+      </cce11:Destinatario>
+      <cce11:Mercancias>
+        <cce11:Mercancia NoIdentificacion="3" FraccionArancelaria="19059099" CantidadAduana="708.00" UnidadAduana="01" ValorUnitarioAduana="1.83" ValorDolares="1293.08"/>
+        <cce11:Mercancia NoIdentificacion="4" FraccionArancelaria="19019099" CantidadAduana="90.00" UnidadAduana="01" ValorUnitarioAduana="1.29" ValorDolares="116.38"/>
+        <cce11:Mercancia NoIdentificacion="2" FraccionArancelaria="19059099" CantidadAduana="235.20" UnidadAduana="01" ValorUnitarioAduana="1.65" ValorDolares="387.92"/>
+        <cce11:Mercancia NoIdentificacion="1" FraccionArancelaria="19019099" CantidadAduana="50.00" UnidadAduana="01" ValorUnitarioAduana="1.13" ValorDolares="56.57"/>
+      </cce11:Mercancias>
+    </cce11:ComercioExterior>
+  </cfdi:Complemento>
+</cfdi:Comprobante>
