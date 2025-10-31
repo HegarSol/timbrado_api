@@ -23,7 +23,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | a PHP script and you can easily do that on your own.
 |
 */
-$config['base_url'] = 'http://localhost:85/cfdi_api/';
+$config['base_url'] = 'http://localhost:85/git_hub_repo/timbrado_api_github/';
 
 /*
 |--------------------------------------------------------------------------

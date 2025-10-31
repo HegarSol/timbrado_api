@@ -44,6 +44,8 @@
             <input class="form-control mr-sm-2" type="text" placeholder="E-Mail" aria-label="E-Mail">
             <input class="form-control mr-sm-2" type="password" placeholder="Password" aria-label="Password">
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Iniciar</button>
+            &nbsp;
+            <a href="<?php echo base_url('Consultar/index')?>" class="btn btn-outline-info my-2 my-sm-0" >Consultar timbres</a>
           </form>
         </div>
       </nav>
