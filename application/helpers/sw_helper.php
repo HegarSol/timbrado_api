@@ -199,7 +199,7 @@ if( !function_exists('sw_timbre_retenciones'))
 
                $xml = 'retencion.xml';
 
-               $ch = curl_init('https://services.test.sw.com.mx/retencion/stamp/v3');
+               $ch = curl_init('https://services.sw.com.mx/retencion/stamp/v3');
 
                $postFields = [
                   'xml' => new CURLFile('retencion.xml', 'text/xml', 'xml')
