@@ -116,8 +116,7 @@ if(!function_exists('timbra_creditoP')){
   function timbra_creditoP($clave_cliente,$xml,$pruebas)
   {
     $id_pac = get_pac_by_cliente($clave_cliente);
-    $timbre = realiza_timbradoP($clave_cliente, $id_pac, $xml, $pruebas);
-   // var_dump($timbre);
+    $timbre = realiza_timbradoP($clave_cliente, $id_pac, $xml, $pruebas); 
     if (!$timbre){
       return NULL;
     }
