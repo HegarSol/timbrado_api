@@ -74,7 +74,6 @@ class Comprobante extends REST_Controller {
             _send_error('HGTM0004');
           }
         } else {
-         // var_dump('es credito');
           try{
             $timbre = timbra_creditoP($cliente->clave, $xml, 1);
             $this->response(['status' => TRUE, 'data' =>$timbre], REST_Controller::HTTP_OK);

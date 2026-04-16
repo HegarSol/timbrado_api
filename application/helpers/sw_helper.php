@@ -195,66 +195,80 @@ if( !function_exists('sw_timbre_retenciones'))
       try
       {
 
-        curl_setopt_array($curl,array(
-            CURLOPT_URL => "http://cfdi.smartweb.com.mx/Timbrado/wcfTimbradoRetenciones.svc",
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => "",
-            CURLOPT_MAXREDIRS => 30,
-            CURLOPT_SSL_VERIFYHOST => 0,
-            CURLOPT_SSL_VERIFYPEER => 0,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => "POST",
-            CURLOPT_POSTFIELDS => "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:tem=\"http://tempuri.org/\">\r\n   <soapenv:Header/>\r\n   <soapenv:Body>\r\n      <tem:TimbrarRetencionXMLV2>\r\n         <!--Optional:-->\r\n         <tem:xmlRetencion><![CDATA[".$xml."]]></tem:xmlRetencion>\r\n         <!--Optional:-->\r\n    <tem:tokenAutenticacion>".$token2."</tem:tokenAutenticacion>   </tem:TimbrarRetencionXMLV2>\r\n   </soapenv:Body>\r\n</soapenv:Envelope>",
-            CURLOPT_HTTPHEADER => array(
-                "Accept: text/xml",
-                "Cache-Control: no-cache",
-                "Content-type: text/xml;charset=\"utf-8\"",
-                "SOAPAction: http://tempuri.org/IwcfTimbradoRetenciones/TimbrarRetencionXMLV2"
-            ),
-        ));
+         file_put_contents('retencion.xml', $xml);
 
-            $response = curl_exec($curl);
+               $xml = 'retencion.xml';
 
-            $dom = new DOMDocument('1.0','UTF-8');
-            $dom->loadXML($response);
+               $ch = curl_init('https://services.test.sw.com.mx/retencion/stamp/v3');
 
-            $resultadoCorrecto = $dom->getElementsByTagName('TimbrarRetencionXMLV2Result')[0]->nodeValue;
-            if($resultadoCorrecto)
+               $postFields = [
+                  'xml' => new CURLFile('retencion.xml', 'text/xml', 'xml')
+               ];
+
+               // si no tienes archivo físico, usa esto:
+               // $postFields = ['xml' => $xml];
+
+               curl_setopt_array($ch, [
+                  CURLOPT_POST => true,
+                  CURLOPT_RETURNTRANSFER => true,
+                  CURLOPT_HTTPHEADER => [
+                     "Authorization: bearer $token2",
+                  ],
+                  CURLOPT_POSTFIELDS => $postFields
+               ]);
+
+               $response = curl_exec($ch);
+            //   curl_close($ch);
+
+               unlink('retencion.xml');
+
+               $response = json_decode($response);
+        
+
+
+         if($response->status == 'success')
+         {
+            $status = true;
+            $error = '';
+            $errordetallado = '';
+
+            $dom = new DOMDocument('1.0','utf-8');
+            $dom->loadXML($response->data->retencion);
+  
+            foreach($dom->getElementsByTagNameNS('http://www.sat.gob.mx/TimbreFiscalDigital','*') as $elemento)
             {
-               $status = true;
-               $error = '';
-               $errordetallado = '';
-
-               $dom = new DOMDocument('1.0','utf-8');
-               $dom->loadXML($resultadoCorrecto);
-
-               foreach($dom->getElementsByTagNameNS('http://www.sat.gob.mx/TimbreFiscalDigital','*') as $elemento)
-               {
-                   $uuid = $elemento->getAttribute('UUID');
-                   $fecha_timbrado = $elemento->getAttribute('FechaTimbrado');
-               }
+              $uuid = $elemento->getAttribute('UUID');
+              $fecha_timbrado = $elemento->getAttribute('FechaTimbrado');
             }
-            else
-            {
-                $errordetallado = $dom->getElementsByTagName('Message')[0]->nodeValue;
-                $error = $dom->getElementsByTagName('faultstring')[0]->nodeValue;
-                $status = false;
-                $resultadoCorrecto = '';
-            }
+            $resultadoCorrecto = $response->data->retencion;
 
-          $arrayAntes = array('cfdi' => $resultadoCorrecto, 'UUID' => $uuid, 'tipo' => 'Retencion');
+         }
+         else
+         {
 
-          $arrayAntes2 = (object) $arrayAntes;
-          $array = array('status' => $status, 'message' => $error, 'messageDetail' => $errordetallado, 'data' => $arrayAntes2);
+            $errordetallado = $response->messageDetail;
+            $error = $response->message;
+            $status = false;
+            $resultadoCorrecto = $response->data->retencion;
+           
+         }
 
-          $array2 = (object) $array;
 
-           $regresa['OperacionExitosa'] = $array2->status;
-           $regresa['MensajeError'] = $array2->message;
-           $regresa['MensajeErrorDetallado'] = $array2->messageDetail;
-           $regresa['CodigoRespuesta'] = $array2->message;
-           $regresa['XmlResultado'] = base64_encode($array2->data->cfdi);
-           $regresa['Timbre'] = $array2->data;
+
+         $arrayAntes = array('cfdi' => $resultadoCorrecto , 'UUID' => $uuid ,'tipo' => 'Retencion');
+
+         $arrayAntes2 = (object) $arrayAntes; 
+         $array = array('status' => $status,'message' => $error,'messageDetail' => $errordetallado,'data' => $arrayAntes2);
+        
+         $array2 = (object) $array;
+
+
+        $regresa['OperacionExitosa'] = $array2->status;
+        $regresa['MensajeError'] = $array2->message;
+        $regresa['MensajeErrorDetallado'] = $array2->messageDetail;
+        $regresa['CodigoRespuesta'] = $array2->message;
+        $regresa['XmlResultado'] = base64_encode($array2->data->cfdi);
+        $regresa['Timbre'] = $array2->data;
       }
       catch (Exception $e)
       {
@@ -281,60 +295,63 @@ if( !(function_exists('sw_timbra_retencionesP')))
 
       $token2 = "T2lYQ0t4L0RHVkR4dHZ5Nkk1VHNEakZ3Y0J4Nk9GODZuRyt4cE1wVm5tbXB3YVZxTHdOdHAwVXY2NTdJb1hkREtXTzE3dk9pMmdMdkFDR2xFWFVPUXpTUm9mTG1ySXdZbFNja3FRa0RlYURqbzdzdlI2UUx1WGJiKzViUWY2dnZGbFloUDJ6RjhFTGF4M1BySnJ4cHF0YjUvbmRyWWpjTkVLN3ppd3RxL0dJPQ.T2lYQ0t4L0RHVkR4dHZ5Nkk1VHNEakZ3Y0J4Nk9GODZuRyt4cE1wVm5tbFlVcU92YUJTZWlHU3pER1kySnlXRTF4alNUS0ZWcUlVS0NhelhqaXdnWTRncklVSWVvZlFZMWNyUjVxYUFxMWFxcStUL1IzdGpHRTJqdS9Zakw2UGRmTDFuTyttKzM1dUZFQ0RUSEJlMTExMjBXcWxGQ3N4VSt2OEdzMG1wd3l3WHhCZS9sS2dSTnRwa2lySkpreW9XT3JVR29DTUpjMUhZais4bzE0K1RQK1pnbTRIbWVkamszaUZubEt2bFhMMGxJQVZoY2cybTFjWUQvMDR2aWYyQ0liZkI3QVBIRTNmRlVQQnhtSnRpOTQrYi95Y0hzem1zVTBlNW5xc25TV0N2ZTJGcDZzQkVUZFhHbTRudklCcXQ4VjNNZDNFSmpNR0Rqc0FGYmU4ZnFyVUM5eDFFalN1aUsxTFRtZWdsb1VpVVQyYnJCWW90cHlkL3I0aVppUHVzWHZOaFppZVN4c2xSM0h4ZW1aODYwRy9vQXdxWUpKQTc3bituVjR5V0ZURW5DaVJzMlQzMjhUNjNUTzloNXNaZkVoYy9MWjkwbGhrdjFRWHlacjhtTU5IU241aVVUREsxenFSZmJZZHlLOTVyUTRVNTJ6S0FZeGpwNDc3Q2RjT0c.wNuLEQohzpgRq5sVx3pHVCJ9aLVT51XVjGoXhqRqh_8";
 
-      $curl = curl_init();
-
       try
       {
-         curl_setopt_array($curl, array(
-            CURLOPT_URL => "http://pruebascfdi.smartweb.com.mx/Timbrado/wcfTimbradoRetenciones.svc",
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => "",
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 30,
-            CURLOPT_SSL_VERIFYHOST => 0,
-            CURLOPT_SSL_VERIFYPEER => 0,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => "POST",
-            CURLOPT_POSTFIELDS => "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:tem=\"http://tempuri.org/\">\r\n   <soapenv:Header/>\r\n   <soapenv:Body>\r\n      <tem:TimbrarRetencionXMLV2>\r\n         <!--Optional:-->\r\n         <tem:xmlRetencion><![CDATA[".$xml."]]></tem:xmlRetencion>\r\n         <!--Optional:-->\r\n    <tem:tokenAutenticacion>".$token2."</tem:tokenAutenticacion>   </tem:TimbrarRetencionXMLV2>\r\n   </soapenv:Body>\r\n</soapenv:Envelope>",
-            CURLOPT_HTTPHEADER => array(
-              "Accept: text/xml",
-              "Cache-Control: no-cache",
-              "Content-type: text/xml;charset=\"utf-8\"",
-              "SOAPAction: http://tempuri.org/IwcfTimbradoRetenciones/TimbrarRetencionXMLV2"
-            ),
-          ));
-   
-         $response = curl_exec($curl);
-         
-         
-         $dom = new DOMDocument('1.0','UTF-8');
-         $dom->loadXML($response);
+         file_put_contents('retencion.xml', $xml);
+
+               $xml = 'retencion.xml';
+
+               $ch = curl_init('https://services.test.sw.com.mx/retencion/stamp/v3');
+
+               $postFields = [
+                  'xml' => new CURLFile('retencion.xml', 'text/xml', 'xml')
+               ];
+
+               // si no tienes archivo físico, usa esto:
+               // $postFields = ['xml' => $xml];
+
+               curl_setopt_array($ch, [
+                  CURLOPT_POST => true,
+                  CURLOPT_RETURNTRANSFER => true,
+                  CURLOPT_HTTPHEADER => [
+                     "Authorization: bearer $token2",
+                  ],
+                  CURLOPT_POSTFIELDS => $postFields
+               ]);
+
+               $response = curl_exec($ch);
+            //   curl_close($ch);
+
+               unlink('retencion.xml');
+
+               $response = json_decode($response);
+        
 
 
-         $resultadoCorrecto = $dom->getElementsByTagName('TimbrarRetencionXMLV2Result')[0]->nodeValue;
-         if($resultadoCorrecto)
+         if($response->status == 'success')
          {
             $status = true;
             $error = '';
             $errordetallado = '';
 
             $dom = new DOMDocument('1.0','utf-8');
-            $dom->loadXML($resultadoCorrecto);
+            $dom->loadXML($response->data->retencion);
   
             foreach($dom->getElementsByTagNameNS('http://www.sat.gob.mx/TimbreFiscalDigital','*') as $elemento)
             {
               $uuid = $elemento->getAttribute('UUID');
               $fecha_timbrado = $elemento->getAttribute('FechaTimbrado');
             }
+            $resultadoCorrecto = $response->data->retencion;
 
          }
          else
          {
 
-            $errordetallado = $dom->getElementsByTagName('Message')[0]->nodeValue;
-            $error = $dom->getElementsByTagName('faultstring')[0]->nodeValue;
+            $errordetallado = $response->messageDetail;
+            $error = $response->message;
             $status = false;
-            $resultadoCorrecto = '';
+            $resultadoCorrecto = $response->data->retencion;
            
          }
 
@@ -354,6 +371,7 @@ if( !(function_exists('sw_timbra_retencionesP')))
         $regresa['CodigoRespuesta'] = $array2->message;
         $regresa['XmlResultado'] = base64_encode($array2->data->cfdi);
         $regresa['Timbre'] = $array2->data;
+
          
       }
       catch (Exception $e)
